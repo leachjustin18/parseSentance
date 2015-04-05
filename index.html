@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vinsolutions test</title>
+</head>
+<body>
+
+<fieldset>
+  <!--Input field where user puts in value-->
+<input type="text" id="inputText" placeholder="Enter word or sentance">
+
+<!--Button to run test-->
+<button id="runTestButton" type="submit">Run test</button>
+</fieldset>
+
+<!--What the user put in-->
+<div>
+  Orginal:
+<span id="orginal"></span>
+</div>
+
+<!--Value comes out after running functions-->
+<div>
+  Output: <span id="output"></span>
+</div>
+
+<!--If there is an error, display here-->
+<aside id="errorMessage">
+
+</aside>
+
+<script>
+/*
+In the programming language of your choice, write a program that parses a sentence and replaces each word with the
+following: first letter, number of distinct characters between first and last character, and last letter.
+For example, Smooth would become S3h.  Words are separated by spaces or non-alphabetic characters and these separators should be
+maintained in their original form and location in the answer.
+*/
+
+var parseSentance = function() {
+  //Grab different elements from the DOM
+  this.btnPress = document.getElementById('runTestButton');
+
+  this.getValue = document.getElementById('inputText');
+
+  this.outputField = document.getElementById('output');
+
+  this.orginalField = document.getElementById('orginal');
+
+  this.errorMessage = document.getElementById('errorMessage');
+
+  //Fire off init function
+  this.init();
+
+  //Return object
+  return parseSentance;
+};
+
+//Init function
+parseSentance.prototype.init = function() {
+  var self = this;
+  var value,
+  removedSpecialCharacters;
+
+  self.btnPress.addEventListener('click', function() {
+    //Get input text value
+    value = self.getValue.value;
+
+    //Ensure the value is not empty
+    if (value !== '') {
+      //Strip out special characters
+      removedSpecialCharacters = value.replace(/[^\w\s]/gi, '');
+
+      //Empty all strings on click of button
+      //This is to allow the test to run without having duplicates
+      //OR to clear the error after it fires off
+      self.errorMessage.innerHTML = '';
+      self.outputField.innerHTML = '';
+      self.orginalField.innerHTML = '';
+
+      //Show user their orginal input
+      self.orginalField.innerHTML = removedSpecialCharacters;
+
+      //Fire off output results function with our input value
+      self.outputResults(removedSpecialCharacters);
+    }
+
+    //If user does not enter a value
+    //Show error to enter a value
+    else {
+      self.errorMessage.innerHTML = 'Please enter a value in the text field above';
+    }
+
+  });
+};
+
+//Output results
+parseSentance.prototype.outputResults = function(sentanceValue) {
+  //Declare local variables
+  var self = this;
+
+  var splitSentance,
+  splitWord,
+  shiftWord,
+  popWord,
+  countInbetweenLetters
+
+  //Split passed sentance into an array of words
+  splitSentance = sentanceValue.split(' ');
+
+  for (var i = 0; i < splitSentance.length; i++) {
+    //Split each word into an array of charactes
+    splitWord = splitSentance[i].split('');
+
+    //Grab and remove first character from the array
+    shiftWord = splitWord.shift();
+
+    //Grab and remove last character from the array
+    popWord = splitWord.pop();
+
+    //Pass the remaning part of the array into a funciton
+    //Function test for duplicate charcters and removes them
+    //Counts how many are remaning
+    countInbetweenLetters = self.removeDuplicateCharacters(splitWord).length;
+
+    //If the last character of the word is not undefined
+    //Output this
+    if (popWord !== undefined) {
+      self.outputField.innerHTML += shiftWord + countInbetweenLetters + popWord + " ";
+    }
+
+    //If last character is undefined.
+    //Output this
+    else {
+      self.outputField.innerHTML += shiftWord + countInbetweenLetters + " ";
+    }
+  }
+
+};
+
+//Remove any duplicate characters from word
+parseSentance.prototype.removeDuplicateCharacters = function(splitWord) {
+  //Declare values
+  var seenLetter = {};
+  var letterOutput = [];
+  var len = splitWord.length;
+  var countLetters = 0;
+
+  var item;
+
+  //Loop through each letter in the array and see if there is any duplicates
+  for (var i = 0; i < len; i++) {
+    item = splitWord[i];
+    //Test if seen letter has not been seen within the array
+    if (seenLetter[item] !== 1) {
+      //Make the seen (duplicate) letter only equal to one
+      seenLetter[item] = 1;
+      //Count all letters
+      letterOutput[countLetters++] = item;
+    }
+  }
+  return letterOutput;
+
+};
+
+//Establish new object
+new parseSentance();
+
+</script>
+</body>
+</html>
