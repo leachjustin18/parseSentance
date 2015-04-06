@@ -31,6 +31,8 @@
 </aside>
 
 <script>
+'use strict';
+
 var parseSentance = function() {
   //Grab different elements from the DOM
   this.btnPress = document.getElementById('runTestButton');
@@ -89,22 +91,22 @@ parseSentance.prototype.init = function() {
 };
 
 //Output results
-parseSentance.prototype.outputResults = function(sentanceValue) {
+parseSentance.prototype.outputResults = function(sentenceValue) {
   //Declare local variables
   var self = this;
 
-  var splitSentance,
+  var splitSentence,
   splitWord,
   shiftWord,
   popWord,
-  countInbetweenLetters
+  countInbetweenLetters;
 
   //Split passed sentance into an array of words
-  splitSentance = sentanceValue.split(' ');
+  splitSentence = sentenceValue.split(' ');
 
-  for (var i = 0; i < splitSentance.length; i++) {
+  for (var i = 0; i < splitSentence.length; i++) {
     //Split each word into an array of charactes
-    splitWord = splitSentance[i].split('');
+    splitWord = splitSentence[i].split('');
 
     //Grab and remove first character from the array
     shiftWord = splitWord.shift();
